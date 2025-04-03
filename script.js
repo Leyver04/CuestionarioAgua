@@ -1,5 +1,5 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAHQ0DcjS5rmfRHzCLBwuk0bPAb232cFAA",
@@ -63,7 +63,7 @@ function finalizarCuestionario() {
 }
 
 function guardarDatosEnFirebase(nombre, grupo, aciertos, tiempo) {
-    db.collection("registros").add({
+    addDoc(collection(db, "registros"), {
         nombre,
         grupo,
         aciertos,
