@@ -1,6 +1,4 @@
-import { getFirestore, collection, addDoc } from './firebaseConfig.js';
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { db, collection, addDoc } from './firebaseConfig.js';
 
 let tiempoLimite = 300; // 5 minutos
 let tiempoTranscurrido = 0;
@@ -45,15 +43,12 @@ function finalizarCuestionario() {
     const grupo = document.getElementById('grupo').value;
     const tiempo = Math.floor(tiempoTranscurrido / 60) + ' minutos y ' + (tiempoTranscurrido % 60) + ' segundos';
 
-    // Verificar respuestas
     verificarRespuesta('pregunta1', 'HTML'); // Ajusta según sea necesario
-    // Agrega más llamadas a verificarRespuesta para cada pregunta
 
     guardarDatosEnFirebase(nombre, grupo, aciertos, tiempo);
 }
 
 function guardarDatosEnFirebase(nombre, grupo, aciertos, tiempo) {
-    const db = getFirestore();
     addDoc(collection(db, "registros"), {
         nombre,
         grupo,
@@ -69,37 +64,6 @@ function guardarDatosEnFirebase(nombre, grupo, aciertos, tiempo) {
         });
 }
 
-// Funciones para autenticación (opcional)
-function registrarUsuario() {
-    const email = document.getElementById('email').value;
-    const contrasena = document.getElementById('contrasena').value;
-
-    const auth = getAuth();
-    createUserWithEmailAndPassword(auth, email, contrasena)
-        .then((userCredential) => {
-            console.log('Usuario registrado:', userCredential.user);
-        })
-        .catch((error) => {
-            console.error('Error al registrar:', error);
-        });
-}
-
-function iniciarSesion() {
-    const email = document.getElementById('email2').value;
-    const contrasena = document.getElementById('contrasena2').value;
-
-    const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, contrasena)
-        .then((userCredential) => {
-            console.log('Sesión iniciada:', userCredential.user);
-        })
-        .catch((error) => {
-            console.error('Error al iniciar sesión:', error);
-        });
-}
-
 // Hacer funciones accesibles globalmente
 window.iniciarCuestionario = iniciarCuestionario;
 window.finalizarCuestionario = finalizarCuestionario;
-window.registrarUsuario = registrarUsuario;
-window.iniciarSesion = iniciarSesion;
